@@ -1,0 +1,49 @@
+<!--ACTUAL CONTENT-->
+<div class="content-container sendHistory_content">
+  <div class="template-list">
+    <!--LOADING SPINNER-->
+    <div *ngIf="loading && !stopLoader" fxLayout="row" fxLayoutAlign="center center" class="loading-spinner-container">
+      <mat-spinner class="loading-spinner"></mat-spinner>
+    </div>
+    <div *ngIf="!loading" class="template-list-table">
+      <!-- [allowPaging]="true" -->
+      <ejs-grid [dataSource]="data" [allowGrouping]="true" [groupSettings]="groupOptions">
+        <e-columns>
+          <!-- DELIVERED STATUS -->
+          <e-column field="delivered_status" [headerText]="'lang_broadcast_history_col_status' | translate" width="100">
+            <ng-template #template let-data>
+              <div class="statusLabels" *ngIf="data.delivered_status === 'Delivered'">
+                <label class="deliveredLabel"></label> <span>{{ data.delivered_status }}</span>
+              </div>
+              <div class="statusLabels" *ngIf="data.delivered_status !== 'Delivered'">
+                <label class="inProgress"></label> <span> In Progress</span>
+              </div>
+            </ng-template>
+          </e-column>
+          <!-- EMAIL -->
+          <e-column field="client_email" [headerText]="'lang_broadcast_history_col_email' | translate"></e-column>
+          <!-- NAME -->
+          <e-column field="client_name" [headerText]="'lang_broadcast_history_col_client' | translate"></e-column>
+          <!-- OPEN -->
+          <e-column
+            field="email_opened"
+            [headerText]="'lang_broadcast_history_col_open' | translate"
+            width="80"
+          ></e-column>
+          <!-- CLICKED -->
+          <e-column
+            field="email_clicked"
+            [headerText]="'lang_broadcast_history_col_click' | translate"
+            width="80"
+          ></e-column>
+          <!-- SEND DATE -->
+          <e-column
+            field="send_date"
+            [headerText]="'lang_broadcast_history_col_send_date' | translate"
+            [format]="formatOptions"
+          ></e-column>
+        </e-columns>
+      </ejs-grid>
+    </div>
+  </div>
+</div>

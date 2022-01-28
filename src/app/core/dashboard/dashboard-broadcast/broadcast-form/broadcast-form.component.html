@@ -1,0 +1,387 @@
+<div class="dashboard-layout" fxLayout fxLayoutAlign="start start">
+  <!--SIDENAV (FOR ALL DEVICES BUT XS)-->
+  <styng-dashboard-navigation *ngIf="!media.isActive('xs')"> </styng-dashboard-navigation>
+
+  <!--Broadcast Add Form-->
+  <div *ngIf="!isEdit" fxLayout="column" fxLayoutAlign="start start" class="dashboard-content-pane">
+    <!--BREAD CRUMB-->
+    <div class="dashboard-breadcrumb" fxLayout="row" fxLayoutAlign="space-between center">
+      <p class="styng-headline-breadcrumb">
+        <b class="styng-bold" [innerHTML]="'lang_create_broadcast_lable' | translate"></b>
+      </p>
+      <i
+        *ngIf="media.isActive('xs')"
+        (click)="drawerService.openDrawer('dashboard')"
+        class="material-icons styng-pointer styng-fs-20"
+        >keyboard_arrow_left</i
+      >
+    </div>
+
+    <div class="content">
+      <div
+        fxLayout="row"
+        fxLayoutAlign="start start"
+        fxLayout.xs="column"
+        fxLayoutAlign.xs="start start"
+        fxLayout.sm="column"
+        fxLayoutAlign.sm="start start"
+        class="broadcast-section"
+      >
+        <form
+          [formGroup]="newBroadcastGroup"
+          fxLayout="column"
+          fxLayoutAlign="start start"
+          class="dashboard-settings-form-wrapper"
+        >
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutAlign.xs="center center">
+            <div fxLayout="column" fxLayoutAlign="start start" class="col-one">
+              <!-- BROADCAST NAME -->
+              <mat-form-field class="broadcast-mat-form-field">
+                <input
+                  matInput
+                  #name
+                  required
+                  maxlength="30"
+                  formControlName="name"
+                  [placeholder]="'lang_broadcast_name' | translate"
+                />
+                <mat-hint align="end">{{ name.value.length }} / 30</mat-hint>
+                <mat-error *ngIf="newBroadcastGroup.get('name').hasError('required')" translate>
+                  lang_broadcast_name_error_empty
+                </mat-error>
+              </mat-form-field>
+
+              <!-- BROADCAST SUBJECT -->
+              <mat-form-field class="broadcast-mat-form-field">
+                <input
+                  matInput
+                  #subject
+                  required
+                  maxlength="100"
+                  formControlName="subject"
+                  [placeholder]="'lang_broadcast_subject' | translate"
+                />
+                <mat-hint align="end">{{ subject.value.length }} / 100</mat-hint>
+                <mat-error *ngIf="newBroadcastGroup.get('subject').hasError('required')" translate>
+                  lang_broadcast_subject_error_empty
+                </mat-error>
+              </mat-form-field>
+
+              <!-- BROADCAST CONTENT -->
+              <mat-form-field class="broadcast-mat-form-field txtarea-group">
+                <textarea
+                  matInput
+                  #content
+                  required
+                  rows="8"
+                  maxlength="5000"
+                  id="broadcast-content"
+                  formControlName="content"
+                  [placeholder]="'lang_broadcast_content' | translate"
+                ></textarea>
+                <mat-hint align="end">{{ content.value.length }} / 5000</mat-hint>
+                <mat-error *ngIf="newBroadcastGroup.get('content').hasError('required')" translate>
+                  lang_broadcast_content_error_empty
+                </mat-error>
+                <div class="txtarea-btnGroup">
+                  <div
+                    class="btn firstName"
+                    (click)="insertAtCursor('first_name')"
+                    [innerHTML]="'lang_broadcast_first_name' | translate"
+                  ></div>
+                  <div
+                    class="btn lastName"
+                    (click)="insertAtCursor('last_name')"
+                    [innerHTML]="'lang_broadcast_last_name' | translate"
+                  ></div>
+                </div>
+              </mat-form-field>
+
+              <!-- FILE UPLOAD CONTROL -->
+              <div class="attech-file-section">
+                <input
+                  type="file"
+                  accept="image/jpeg, image/png, application/pdf"
+                  class="file-input"
+                  (change)="onFileSelected($event)"
+                  #fileUpload
+                  multiple
+                />
+
+                <div
+                  class="file-upload styng-pointer"
+                  (click)="fileUpload.click()"
+                  [matTooltip]="'lang_broadcast_invalid_file_warning' | translate"
+                >
+                  <button mat-mini-fab color="primary" class="upload-btn">
+                    <mat-icon>attach_file</mat-icon>
+                  </button>
+                  {{ fileName || attachFile + ' ' }} {{ this.files.length + '/3' }}
+                </div>
+
+                <!-- FILE UPLOADED LIST -->
+                <ul>
+                  <li *ngFor="let file of files">
+                    <div>
+                      {{ file.filename }}
+                      <figure>
+                        <img
+                          class="img-full"
+                          src="../../../../assets/images/close-icon.png"
+                          alt="img"
+                          *ngIf="!file.loading"
+                          (click)="removeFile(file)"
+                        />
+                        <img
+                          class="img-full"
+                          *ngIf="file.loading"
+                          src="../../../../assets/images/loading-icon.png"
+                          alt="img"
+                        />
+                      </figure>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="progress">
+                <mat-progress-bar
+                  class="progress-bar"
+                  mode="determinate"
+                  [value]="uploadProgress"
+                  *ngIf="uploadProgress"
+                >
+                </mat-progress-bar>
+                <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="uploadProgress"
+                  >delete_forever</mat-icon
+                >
+              </div>
+
+              <!-- BUTTONS  -->
+              <div class="btn-group">
+                <a
+                  mat-raised-button
+                  (click)="goBack()"
+                  class="btn btn-back styng-hover-pointer"
+                  [innerHTML]="'lang_back' | translate"
+                >
+                </a>
+                <a
+                  mat-raised-button
+                  (click)="save()"
+                  class="btn btn-selectRecipients styng-hover-pointer"
+                  [innerHTML]="'lang_broadcast_recipient_btn' | translate"
+                >
+                </a>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!--Broadcast Edit Form-->
+  <div *ngIf="isEdit" fxLayout="column" fxLayoutAlign="start start" class="dashboard-content-pane">
+    <!--BREAD CRUMB-->
+    <div class="dashboard-breadcrumb" fxLayout="row" fxLayoutAlign="space-between center">
+      <p class="styng-headline-breadcrumb">
+        <b *ngIf="isEdit && !isHistory" class="styng-bold" [innerHTML]="'lang_broadcast_send_lable' | translate"></b>
+        <b
+          *ngIf="isEdit && isHistory"
+          class="styng-bold"
+          [innerHTML]="'lang_broadcast_history_tab_title' | translate"
+        ></b>
+      </p>
+      <i
+        *ngIf="media.isActive('xs')"
+        (click)="drawerService.openDrawer('dashboard')"
+        class="material-icons styng-pointer styng-fs-20"
+        >keyboard_arrow_left</i
+      >
+    </div>
+    <div fxLayout fxLayoutAlign="start center" fxLayoutGap="10px" class="selection-buttons-container">
+      <!-- CONTENT AND HISTORY TAB -->
+      <a
+        [class.active]="isEdit && !isHistory"
+        (click)="getContent()"
+        class="btn selection-button"
+        [innerHTML]="'lang_broadcast_content_tab' | translate"
+      >
+      </a>
+      <a
+        [class.active]="isEdit && isHistory"
+        (click)="getHistory()"
+        class="btn selection-button"
+        [innerHTML]="'lang_broadcast_history_tab' | translate"
+      >
+      </a>
+    </div>
+
+    <div class="content">
+      <div
+        *ngIf="isEdit && !isHistory"
+        fxLayout="row"
+        fxLayoutAlign="start start"
+        fxLayout.xs="column"
+        fxLayoutAlign.xs="start start"
+        fxLayout.sm="column"
+        fxLayoutAlign.sm="start start"
+        class="broadcast-section"
+      >
+        <form
+          [formGroup]="newBroadcastGroup"
+          fxLayout="column"
+          fxLayoutAlign="start start"
+          class="dashboard-settings-form-wrapper"
+        >
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutAlign.xs="center center">
+            <div fxLayout="column" fxLayoutAlign="start start" class="col-one">
+              <!-- BROADCAST NAME -->
+              <mat-form-field class="broadcast-mat-form-field">
+                <input
+                  matInput
+                  #name
+                  required
+                  maxlength="30"
+                  formControlName="name"
+                  [placeholder]="'lang_broadcast_name' | translate"
+                />
+                <mat-hint align="end">{{ name.value.length }} / 30</mat-hint>
+                <mat-error *ngIf="newBroadcastGroup.get('name').hasError('required')" translate>
+                  lang_broadcast_name_error_empty
+                </mat-error>
+              </mat-form-field>
+
+              <!-- BROADCAST SUBJECT -->
+              <mat-form-field class="broadcast-mat-form-field">
+                <input
+                  matInput
+                  #subject
+                  required
+                  maxlength="100"
+                  formControlName="subject"
+                  [placeholder]="'lang_broadcast_subject' | translate"
+                />
+                <mat-hint align="end">{{ subject.value.length }} / 100</mat-hint>
+                <mat-error *ngIf="newBroadcastGroup.get('subject').hasError('required')" translate>
+                  lang_broadcast_subject_error_empty
+                </mat-error>
+              </mat-form-field>
+
+              <!-- BROADCAST CONTENT -->
+              <mat-form-field class="broadcast-mat-form-field txtarea-group">
+                <textarea
+                  matInput
+                  #content
+                  required
+                  rows="8"
+                  maxlength="5000"
+                  id="broadcast-content"
+                  formControlName="content"
+                  [placeholder]="'lang_broadcast_content' | translate"
+                ></textarea>
+                <mat-hint align="end">{{ content.value.length }} / 5000</mat-hint>
+                <mat-error *ngIf="newBroadcastGroup.get('content').hasError('required')" translate>
+                  lang_broadcast_content_error_empty
+                </mat-error>
+                <div class="txtarea-btnGroup">
+                  <div
+                    class="btn firstName"
+                    (click)="insertAtCursor('first_name')"
+                    [innerHTML]="'lang_broadcast_first_name' | translate"
+                  ></div>
+                  <div
+                    class="btn lastName"
+                    (click)="insertAtCursor('last_name')"
+                    [innerHTML]="'lang_broadcast_last_name' | translate"
+                  ></div>
+                </div>
+              </mat-form-field>
+
+              <!-- FILE UPLOAD CONTROL -->
+              <div class="attech-file-section">
+                <input
+                  type="file"
+                  accept="image/jpeg, image/png, application/pdf"
+                  class="file-input"
+                  (change)="onFileSelected($event)"
+                  #fileUpload
+                  multiple
+                />
+
+                <div
+                  class="file-upload styng-pointer"
+                  (click)="fileUpload.click()"
+                  [matTooltip]="'lang_broadcast_invalid_file_warning' | translate"
+                >
+                  <button mat-mini-fab color="primary" class="upload-btn">
+                    <mat-icon>attach_file</mat-icon>
+                  </button>
+                  {{ fileName || attachFile + ' ' }} {{ this.files.length + '/3' }}
+                </div>
+
+                <!-- FILE UPLOADED LIST -->
+                <ul>
+                  <li *ngFor="let file of files">
+                    <div>
+                      {{ file.filename }}
+                      <figure>
+                        <img
+                          class="img-full"
+                          src="../../../../assets/images/close-icon.png"
+                          alt="img"
+                          *ngIf="!file.loading"
+                          (click)="removeFile(file)"
+                        />
+                        <img
+                          class="img-full"
+                          *ngIf="file.loading"
+                          src="../../../../assets/images/loading-icon.png"
+                          alt="img"
+                        />
+                      </figure>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="progress">
+                <mat-progress-bar
+                  class="progress-bar"
+                  mode="determinate"
+                  [value]="uploadProgress"
+                  *ngIf="uploadProgress"
+                >
+                </mat-progress-bar>
+                <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="uploadProgress"
+                  >delete_forever</mat-icon
+                >
+              </div>
+
+              <!--BUTTONS-->
+              <div class="btn-group">
+                <a
+                  mat-raised-button
+                  (click)="goBack()"
+                  class="btn btn-back styng-hover-pointer"
+                  [innerHTML]="'lang_back' | translate"
+                >
+                </a>
+                <a
+                  mat-raised-button
+                  (click)="save()"
+                  class="btn btn-selectRecipients styng-hover-pointer"
+                  [innerHTML]="'lang_broadcast_recipient_btn' | translate"
+                >
+                </a>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- BROADCAST HISTORY COMPONENT -->
+      <div *ngIf="isEdit && isHistory">
+        <app-broadcast-history [broadcast_id]="_id"></app-broadcast-history>
+      </div>
+    </div>
+  </div>
+</div>

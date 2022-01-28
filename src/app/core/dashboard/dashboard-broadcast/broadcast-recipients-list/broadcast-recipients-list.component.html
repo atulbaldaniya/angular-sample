@@ -1,0 +1,458 @@
+<div class="dashboard-layout" fxLayout fxLayoutAlign="start start">
+  <!--SIDENAV (FOR ALL DEVICES BUT XS)-->
+  <styng-dashboard-navigation *ngIf="!media.isActive('xs')"> </styng-dashboard-navigation>
+
+  <!--CONTENT PANE-->
+  <div fxLayout="column" fxLayoutAlign="start start" class="dashboard-content-pane">
+    <!--BREAD CRUMB-->
+    <div class="dashboard-breadcrumb" fxLayout="row" fxLayoutAlign="space-between center">
+      <p class="styng-headline-breadcrumb"><b class="styng-bold" translate>lang_broadcast_send_lable</b></p>
+      <i
+        *ngIf="media.isActive('xs')"
+        (click)="drawer_service.openDrawer('dashboard')"
+        class="material-icons styng-pointer styng-fs-20"
+        >keyboard_arrow_left</i
+      >
+    </div>
+
+    <!--ACTUAL CONTENT-->
+    <div class="content-container">
+      <div class="pageContent_wrapper">
+        <!--LOADING SPINNER-->
+        <div *ngIf="loading" fxLayout="row" fxLayoutAlign="center center" class="loading-spinner-container">
+          <mat-spinner class="loading-spinner"></mat-spinner>
+        </div>
+        <form [formGroup]="filterForm" class="filter-form">
+          <div fxLayout="row" fxLayoutAlign="start start">
+            <div fxLayout="row" fxLayoutAlign="start start">
+              <!-- ARTISTS -->
+              <mat-form-field class="styng-form-field-width pr-2">
+                <mat-select
+                  class="cls-1"
+                  [placeholder]="'lang_broadcast_recipient_artist' | translate"
+                  formControlName="artist"
+                  (selectionChange)="filterList()"
+                  multiple
+                >
+                  <mat-select-trigger>
+                    <span *ngIf="artistSelect.value?.length > 0">
+                      {{ artistSelect.value.length + ' selected' }}
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option class="cls-2" *ngFor="let artist of artists" [value]="artist._id">{{
+                    artist.artistName
+                  }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- STYLES -->
+              <mat-form-field class="styng-form-field-width pr-2">
+                <mat-select
+                  class="cls-1"
+                  [placeholder]="'lang_broadcast_recipient_style' | translate"
+                  formControlName="style"
+                  (selectionChange)="filterList()"
+                  multiple
+                >
+                  <mat-select-trigger>
+                    <span *ngIf="stylesSelect.value?.length > 0">
+                      {{ stylesSelect.value.length + ' selected' }}
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option class="cls-2" *ngFor="let style of styles" [value]="style.value">{{
+                    style.placeholder
+                  }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- SESSION N OTHER FILTERS -->
+              <div class="wrapper" #wrapperSession>
+                <mat-form-field class="styng-form-field-width pr-2" (click)="showTooltip()">
+                  <mat-select
+                    class="cls-1"
+                    [placeholder]="'lang_broadcast_session' | translate"
+                    formControlName="session"
+                    multiple
+                  >
+                  </mat-select>
+                </mat-form-field>
+                <div class="tooltip" *ngIf="tooltip">
+                  <ejs-accordion
+                    #element
+                    (clickOutside)="clickedOutside($event)"
+                    (expanding)="expanding($event)"
+                    (clicked)="onClick($event)"
+                  >
+                    <e-accordionitems>
+                      <e-accordionitem>
+                        <ng-template #header>
+                          <div class="ib">
+                            <ejs-checkbox (change)="changeHandler($event)"></ejs-checkbox>
+                          </div>
+                          <div class="ib" translate>lang_broadcast_date_created</div>
+                        </ng-template>
+                        <ng-template #content>
+                          <!-- CREATED OPTIONS -->
+                          <mat-form-field class="styng-form-field-width styng-w-100pc">
+                            <mat-select
+                              class="cls-1"
+                              [placeholder]="'lang_broadcast_range' | translate"
+                              panelClass="locale-selector-panel"
+                              formControlName="created_range"
+                            >
+                              <mat-option class="cls-2" *ngFor="let range of ranges" [value]="range.key">
+                                {{ range.value }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+
+                          <!-- CREATED DATE RANGE -->
+                          <ejs-daterangepicker
+                            *ngIf="
+                              filterForm.value.created_range === 'between' || filterForm.value.created_range === null
+                            "
+                            #timeRangePicker
+                            formControlName="created_range_date"
+                            class="form-input"
+                            [floatLabelType]="floatLabelType"
+                            [placeholder]="'DATE_RANGE' | translate"
+                            [startDate]="time_range_start"
+                            [endDate]="time_range_end"
+                            (change)="onDateChange()"
+                            [format]="'MM.dd.yy'"
+                          >
+                          </ejs-daterangepicker>
+
+                          <!-- CREATED START DATE -->
+                          <mat-form-field
+                            class="accordion-date-input"
+                            *ngIf="
+                              filterForm.value.created_range !== 'between' && filterForm.value.created_range !== null
+                            "
+                          >
+                            <input
+                              matInput
+                              [matDatepicker]="created_start"
+                              [placeholder]="'lang_broadcast_date' | translate"
+                              formControlName="created_start"
+                              (dateChange)="onDateChange()"
+                            />
+                            <mat-datepicker-toggle matSuffix [for]="created_start"></mat-datepicker-toggle>
+                            <mat-datepicker #created_start></mat-datepicker>
+                          </mat-form-field>
+                        </ng-template>
+                      </e-accordionitem>
+                      <e-accordionitem>
+                        <ng-template #header>
+                          <div class="ib">
+                            <ejs-checkbox (change)="changeHandler($event)"></ejs-checkbox>
+                          </div>
+                          <div class="ib" translate>lang_broadcast_session_date</div>
+                        </ng-template>
+                        <ng-template #content>
+                          <!-- SESSION OPTIONS -->
+                          <mat-form-field class="styng-form-field-width styng-w-100pc">
+                            <mat-select
+                              class="cls-1"
+                              [placeholder]="'lang_broadcast_range' | translate"
+                              formControlName="session_range"
+                              panelClass="locale-selector-panel"
+                            >
+                              <mat-option class="cls-2" *ngFor="let range of ranges" [value]="range.key">
+                                {{ range.value }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+
+                          <!-- SESSION DATE RANGE -->
+                          <ejs-daterangepicker
+                            *ngIf="
+                              filterForm.value.session_range === 'between' || filterForm.value.session_range === null
+                            "
+                            #timeRangePicker
+                            formControlName="session_range_date"
+                            class="form-input"
+                            [floatLabelType]="floatLabelType"
+                            [placeholder]="'DATE_RANGE' | translate"
+                            [startDate]="time_range_start"
+                            [endDate]="time_range_end"
+                            (change)="onDateChange()"
+                            [format]="'MM.dd.yy'"
+                          >
+                          </ejs-daterangepicker>
+
+                          <!-- SESSION START DATE -->
+                          <mat-form-field
+                            class="accordion-date-input"
+                            *ngIf="
+                              filterForm.value.session_range !== 'between' && filterForm.value.session_range !== null
+                            "
+                          >
+                            <input
+                              matInput
+                              [matDatepicker]="session_start"
+                              [placeholder]="'lang_broadcast_date' | translate"
+                              formControlName="session_start"
+                              (dateChange)="onDateChange()"
+                            />
+                            <mat-datepicker-toggle matSuffix [for]="session_start"></mat-datepicker-toggle>
+                            <mat-datepicker #session_start></mat-datepicker>
+                          </mat-form-field>
+                        </ng-template>
+                      </e-accordionitem>
+                      <e-accordionitem>
+                        <ng-template #header>
+                          <div class="ib">
+                            <ejs-checkbox (change)="changeHandler($event)"></ejs-checkbox>
+                          </div>
+                          <div class="ib" translate>lang_broadcast_history_col_status</div>
+                        </ng-template>
+                        <ng-template #content>
+                          <!-- STATUS -->
+                          <mat-form-field class="styng-form-field-width pr-2">
+                            <mat-select
+                              class="cls-1"
+                              [placeholder]="'lang_broadcast_history_col_status' | translate"
+                              formControlName="status"
+                              (selectionChange)="filterList()"
+                              panelClass="locale-selector-panel"
+                              multiple
+                            >
+                              <mat-option
+                                class="cls-2"
+                                *ngFor="let status of statuses"
+                                [value]="status.key"
+                                [innerHTML]="status.value | translate"
+                              >
+                                ></mat-option
+                              >
+                            </mat-select>
+                          </mat-form-field>
+                        </ng-template>
+                      </e-accordionitem>
+                    </e-accordionitems>
+                  </ejs-accordion>
+                </div>
+              </div>
+
+              <!-- DEPOSITS -->
+              <mat-form-field class="styng-form-field-width pr-2">
+                <mat-select
+                  class="cls-1"
+                  [placeholder]="'lang_broadcast_recipient_deposit' | translate"
+                  formControlName="deposit"
+                  (selectionChange)="filterList()"
+                  multiple
+                >
+                  <mat-option class="cls-2" *ngFor="let deposit of deposits" [value]="deposit">{{
+                    deposit
+                  }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- FILTERS -->
+              <mat-form-field class="styng-form-field-width pr-2">
+                <mat-select
+                  class="cls-1"
+                  [placeholder]="'lang_broadcast_saved_filters' | translate"
+                  formControlName="savedFilter"
+                  (selectionChange)="getSaveFilterData()"
+                >
+                  <mat-option>None</mat-option>
+                  <mat-option class="cls-2" *ngFor="let saveFilter of savedFilterList" [value]="saveFilter">{{
+                    saveFilter.name
+                  }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+
+        <!-- ACTIVE CHIPS -->
+        <mat-chip-list *ngIf="chips.length">
+          <div *ngFor="let chip of chips; let i = index">
+            <mat-chip *ngIf="!showAllActiveFilter && i < 3">
+              {{ chip.displayName }}
+              <mat-icon matChipRemove (click)="removeChip(chip)">cancel</mat-icon></mat-chip
+            >
+          </div>
+          <div *ngIf="showAllActiveFilter">
+            <mat-chip *ngFor="let chip of chips">
+              {{ chip.displayName }}
+              <mat-icon matChipRemove (click)="removeChip(chip)">cancel</mat-icon></mat-chip
+            >
+          </div>
+          <mat-chip
+            class="styng-pointer"
+            *ngIf="showAllActiveFilter && chips.length > 3"
+            (click)="showAllActiveFilter = !showAllActiveFilter"
+            >show less</mat-chip
+          >
+          <mat-chip
+            class="styng-pointer"
+            *ngIf="!showAllActiveFilter && chips.length > 3"
+            (click)="showAllActiveFilter = !showAllActiveFilter"
+            >show all ({{ chips.length }})</mat-chip
+          >
+        </mat-chip-list>
+
+        <div class="confirmation-txt" *ngIf="showSaveFilterOption && !showSaveFilterForm" translate>
+          lang_broadcast_save_filter_line <span (click)="showSaveFilterForm = true"><mat-icon>check</mat-icon></span
+          ><span (click)="showSaveFilterOption = false"><mat-icon>close</mat-icon></span>
+        </div>
+        <div *ngIf="showSaveFilterOption && showSaveFilterForm">
+          <form [formGroup]="savefilterForm" class="filter-form">
+            <!-- SAVE FILTER NAME -->
+            <mat-form-field class="broadcast-mat-form-field">
+              <input
+                matInput
+                #name
+                required
+                maxlength="30"
+                formControlName="name"
+                [placeholder]="'lang_broadcast_name' | translate"
+              />
+              <mat-hint align="end">{{ name.value.length }} / 30</mat-hint>
+              <mat-error *ngIf="savefilterForm.get('name').hasError('required')" translate>
+                lang_broadcast_filter_error_empty
+              </mat-error>
+            </mat-form-field>
+
+            <!-- SAVE FILTER ACTIONS -->
+            <div class="btn-group">
+              <button
+                mat-raised-button
+                (click)="saveFilter()"
+                class="btn btn-save btn-selectRecipients styng-hover-pointer"
+                [innerHTML]="'lang_broadcast_save_filter_btn' | translate"
+              ></button>
+              <button
+                mat-raised-button
+                (click)="showSaveFilterOption = false"
+                class="btn btn-close btn-selectRecipients styng-hover-pointer"
+                [innerHTML]="'lang_broadcast_close_btn' | translate"
+              ></button>
+            </div>
+          </form>
+        </div>
+
+        <!-- SORTABLE TABLE -->
+        <div class="template-list">
+          <div class="template-list-table">
+            <table mat-table matSort [dataSource]="data_source">
+              <!--SHORTCUT ICON -->
+              <ng-container matColumnDef="shortcut_icon" class="template-list-table-row-shortcut">
+                <th mat-header-cell *matHeaderCellDef>
+                  <i class="material-icons">library_books</i>
+                </th>
+              </ng-container>
+
+              <div *ngFor="let column of table_columns">
+                <!-- SELECT CHECKBOX COLUMN -->
+                <ng-container [matColumnDef]="column.column_def" *ngIf="column.column_def === 'select'">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox
+                      (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    >
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <mat-checkbox
+                      (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)"
+                    >
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <!-- NAME -->
+                <ng-container [matColumnDef]="column.column_def" *ngIf="column.column_def === 'name'">
+                  <th mat-header-cell *matHeaderCellDef>{{ column.text_translate | translate }}</th>
+                  <div>
+                    <td mat-cell *matCellDef="let template" class="template-list-table-row">
+                      <ng-container *ngIf="template">{{ template[column.column_def] }}</ng-container>
+                    </td>
+                  </div>
+                </ng-container>
+
+                <!-- STYLE -->
+                <ng-container [matColumnDef]="column.column_def" *ngIf="column.column_def === 'style'">
+                  <th mat-header-cell *matHeaderCellDef>{{ column.text_translate | translate }}</th>
+                  <div>
+                    <td
+                      mat-cell
+                      *matCellDef="let template"
+                      class="template-list-table-row"
+                      [matTooltip]="displayStyleTooltip(template)"
+                    >
+                      <ng-container *ngIf="template">{{ displayStyleRow(template) }}</ng-container>
+                    </td>
+                  </div>
+                </ng-container>
+
+                <!-- ARTIST -->
+                <ng-container [matColumnDef]="column.column_def" *ngIf="column.column_def === 'artist'">
+                  <th mat-header-cell *matHeaderCellDef>{{ column.text_translate | translate }}</th>
+                  <div>
+                    <td
+                      mat-cell
+                      *matCellDef="let template"
+                      class="template-list-table-row"
+                      [matTooltip]="displayArtistTooltip(template)"
+                    >
+                      <ng-container *ngIf="template">{{ displayArtistRow(template) }}</ng-container>
+                    </td>
+                  </div>
+                </ng-container>
+
+                <!-- DEPOSIT -->
+                <ng-container [matColumnDef]="column.column_def" *ngIf="column.column_def === 'deposit'">
+                  <th mat-header-cell *matHeaderCellDef>{{ column.text_translate | translate }}</th>
+                  <div>
+                    <td
+                      mat-cell
+                      *matCellDef="let template"
+                      class="template-list-table-row"
+                      [matTooltip]="displayDepositTooltip(template)"
+                    >
+                      <ng-container *ngIf="template">{{ displayDepositRow(template) }}</ng-container>
+                    </td>
+                  </div>
+                </ng-container>
+              </div>
+              <tr mat-header-row *matHeaderRowDef="displayed_columns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayed_columns"></tr>
+            </table>
+          </div>
+          <mat-paginator
+            class="template-list-paginator"
+            [pageSize]="10"
+            [pageSizeOptions]="[10, 20, 50, 100]"
+            [showFirstLastButtons]="true"
+          >
+          </mat-paginator>
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="action-btn-group">
+          <a
+            mat-raised-button
+            class="btn btn-back styng-hover-pointer"
+            (click)="goBack()"
+            [innerHTML]="'lang_back' | translate"
+          >
+          </a>
+          <button
+            mat-raised-button
+            class="btn btn-sendbroadcast styng-hover-pointer"
+            (click)="sendBroadcast()"
+            [innerHTML]="'lang_broadcast_send_recipient_btn' | translate: { selected: selection.selected.length }"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,95 @@
+<div class="dashboard-layout" fxLayout fxLayoutAlign="start start">
+  <!--SIDENAV (FOR ALL DEVICES BUT XS)-->
+  <styng-dashboard-navigation *ngIf="!media.isActive('xs')"> </styng-dashboard-navigation>
+
+  <!--CONTENT PANE-->
+  <div fxLayout="column" fxLayoutAlign="start start" class="dashboard-content-pane">
+    <!--BREAD CRUMB-->
+    <div class="dashboard-breadcrumb" fxLayout="row" fxLayoutAlign="space-between center">
+      <p class="styng-headline-breadcrumb"><b class="styng-bold" translate>lang_broadcast</b></p>
+      <i
+        *ngIf="media.isActive('xs')"
+        (click)="drawer_service.openDrawer('dashboard')"
+        class="material-icons styng-pointer styng-fs-20"
+        >keyboard_arrow_left</i
+      >
+    </div>
+
+    <!--ACTUAL CONTENT-->
+    <div class="content-container">
+      <!--LOADING SPINNER-->
+      <div *ngIf="loading" fxLayout="row" fxLayoutAlign="center center" class="loading-spinner-container">
+        <mat-spinner class="loading-spinner"></mat-spinner>
+      </div>
+
+      <!--BUTTON-->
+      <a
+        [routerLink]="'/dashboard/broadcasts/neu'"
+        fxLayout
+        fxLayoutGap="10px"
+        fxLayoutAlign="start center"
+        class="btn-text-holder"
+      >
+        <i class="material-icons styng-fs-22 styng-mr20">add_box</i>
+        <p class="button-text" translate>lang_new_broadcast</p>
+      </a>
+
+      <!-- SORTABLE TABLE -->
+      <div class="template-list">
+        <div class="template-list-table">
+          <table mat-table matSort [dataSource]="data_source">
+            <!--SHORTCUT ICON -->
+            <ng-container matColumnDef="shortcut_icon" class="template-list-table-row-shortcut">
+              <th mat-header-cell *matHeaderCellDef>
+                <i class="material-icons">library_books</i>
+              </th>
+            </ng-container>
+            <div *ngFor="let column of table_columns">
+              <ng-container [matColumnDef]="column.column_def">
+                <!-- ACTION -->
+                <div *ngIf="column.column_def === 'action'">
+                  <th mat-header-cell *matHeaderCellDef>{{ column.text_translate | translate }}</th>
+                  <td mat-cell *matCellDef="let template" class="template-list-table-row">
+                    <ng-container *ngIf="template">
+                      <mat-icon (click)="edit(template)">edit</mat-icon>
+                      <mat-icon (click)="delete(template)">delete</mat-icon>
+                    </ng-container>
+                  </td>
+                </div>
+
+                <!-- OTHER COLUMNS -->
+                <div *ngIf="column.column_def !== 'action'">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ column.text_translate | translate }}</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let template"
+                    (click)="cellClicked(template)"
+                    class="template-list-table-row"
+                  >
+                    <!-- LAST SEND DATE OF BROADCAST -->
+                    <ng-container *ngIf="template && column.column_def === 'last_send_date'">{{
+                      template[column.column_def] | date: 'EEEE, MMMM dd, yyyy'
+                    }}</ng-container>
+                    <!-- OTHER COLUMNS -->
+                    <ng-container *ngIf="template && column.column_def !== 'last_send_date'">{{
+                      template[column.column_def]
+                    }}</ng-container>
+                  </td>
+                </div>
+              </ng-container>
+            </div>
+            <tr mat-header-row *matHeaderRowDef="displayed_columns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayed_columns"></tr>
+          </table>
+        </div>
+        <mat-paginator
+          class="template-list-paginator"
+          [pageSize]="10"
+          [pageSizeOptions]="[10, 20, 50, 100]"
+          [showFirstLastButtons]="true"
+        >
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

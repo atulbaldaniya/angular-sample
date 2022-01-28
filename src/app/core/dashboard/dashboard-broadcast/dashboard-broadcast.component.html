@@ -1,0 +1,69 @@
+<div class="dashboard-layout" fxLayout fxLayoutAlign="start start">
+  <!--SIDENAV (FOR ALL DEVICES BUT XS)-->
+  <styng-dashboard-navigation *ngIf="!media.isActive('xs')"> </styng-dashboard-navigation>
+
+  <!--CONTENT PANE-->
+  <div fxLayout="column" fxLayoutAlign="start start" class="dashboard-content-pane">
+    <!--BREAD CRUMB-->
+    <div class="dashboard-breadcrumb" fxLayout="row" fxLayoutAlign="space-between center">
+      <p class="styng-headline-breadcrumb"><b class="styng-bold" [innerHTML]="'lang_broadcast' | translate"></b></p>
+      <i
+        *ngIf="media.isActive('xs')"
+        (click)="drawerService.openDrawer('dashboard')"
+        class="material-icons styng-pointer styng-fs-20"
+        >keyboard_arrow_left</i
+      >
+    </div>
+
+    <!--ACTUAL CONTENT-->
+    <div class="content">
+      <div class="white-box">
+        <app-business-page-carousel
+          class="carousel-container"
+          [activePane]="active_pane"
+          [pauseSlider]="pause_slider"
+          [navigation]="'benefits'"
+          (mouseenter)="pauseSlider()"
+          (mouseleave)="continueSlider()"
+        >
+          <!-- SLIDE 1 -->
+          <div left class="carousel-box-container">
+            <div class="animation-container">
+              <ng-lottie [options]="{ path: animations.calendar, loop: true, autoplay: true }"></ng-lottie>
+            </div>
+            <h2 class="carousel-headline" [innerHTML]="'lang_left_broadcast_headline' | translate"></h2>
+            <h2 class="carousel-sub-headline" [innerHTML]="'lang_left_broadcast_sub_headline' | translate"></h2>
+          </div>
+
+          <!-- SLIDE 2 -->
+          <div center class="carousel-box-container">
+            <div class="animation-container">
+              <ng-lottie [options]="{ path: animations.messenger, loop: true, autoplay: true }"></ng-lottie>
+            </div>
+            <h2 class="carousel-headline" [innerHTML]="'lang_center_broadcast_headline' | translate"></h2>
+            <h2 class="carousel-sub-headline" [innerHTML]="'lang_center_broadcast_sub_headline' | translate"></h2>
+          </div>
+
+          <!-- SLIDE 3 -->
+          <div right class="carousel-box-container">
+            <div class="animation-container">
+              <ng-lottie [options]="{ path: animations.security, loop: true, autoplay: true }"></ng-lottie>
+            </div>
+            <h2 class="carousel-headline" [innerHTML]="'lang_right_broadcast_headline' | translate"></h2>
+            <h2 class="carousel-sub-headline" [innerHTML]="'lang_right_broadcast_sub_headline' | translate"></h2>
+          </div>
+        </app-business-page-carousel>
+          <!-- BUTTON -->
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutAlign.xs="center center">
+          <a
+            mat-raised-button
+            [routerLink]="'/dashboard/broadcasts/neu'"
+            class="btn-create-broadcast styng-hover-pointer"
+            [innerHTML]="'lang_create_broadcast' | translate"
+          >
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

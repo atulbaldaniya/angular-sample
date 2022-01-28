@@ -1,0 +1,99 @@
+@import "../../../theme/variables.scss";
+
+.dashboard-layout {
+  padding-top: 58px;
+  padding-left: 210px;
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+}
+
+.content {
+  padding: 0 20px;
+  width: 100%;
+  background-color: #f0f0f0;
+}
+
+@media only screen and (max-width: 599px) {
+  .dashboard-layout {
+    padding-left: 0px;
+    padding-top: 20px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: 100%;
+    min-height: calc(100vh - 97px);
+    background-color: #f0f0f0;
+    margin-bottom: 98px;
+    padding-bottom: 20px;
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 959px) {
+  .dashboard-layout {
+    min-height: calc(100vh - 97px);
+    background-color: #f0f0f0;
+  }
+}
+
+.white-box {
+  background: $white;
+  padding: 135px 20px;
+  margin: 0;
+  border-radius: 10px;
+  @include xsm {
+    padding: 70px 20px;
+  }
+  .carousel-container {
+    margin-bottom: 10px;
+    .carousel-box-container {
+      max-width: 400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .animation-container {
+      max-width: 160px;
+      width: 100%;
+      margin: 0 auto 50px;
+    }
+    .carousel-headline {
+      font-family: Helvetica, sans-serif !important;
+      color: $black;
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .carousel-sub-headline {
+      font-family: Helvetica, sans-serif !important;
+      color: $black;
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .navigation-dots-benefits {
+      padding: 0;
+    }
+  }
+
+  .btn-create-broadcast {
+    border-radius: 18px;
+    margin: 0 auto;
+  }
+  .btn-create-broadcast {
+    color: $white;
+    background: $black;
+    font-size: 16px;
+    text-decoration: none;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    &:hover {
+      background: #404040;
+    }
+  }
+}

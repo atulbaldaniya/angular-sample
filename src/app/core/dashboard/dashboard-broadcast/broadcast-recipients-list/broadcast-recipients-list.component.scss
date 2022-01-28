@@ -1,0 +1,637 @@
+@import "../../../../theme/variables.scss";
+
+.dashboard-layout {
+  padding-top: 58px;
+  padding-left: 210px;
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+}
+
+.content {
+  padding: 0 20px;
+  width: 100%;
+  background-color: #f0f0f0;
+}
+
+.btn {
+  color: $white;
+  background: $black;
+  font-size: 16px;
+  height: 35px;
+  line-height: 35px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.dashboard-content-pane {
+  .content-container {
+    padding: 0 20px 20px;
+    width: 100%;
+    background: #f0f0f0;
+    .filter-form {
+      & > div {
+        & > div {
+          @include screen1024_1279 {
+            flex-wrap: wrap;
+          }
+          @include md {
+            flex-wrap: wrap;
+          }
+          @include sm {
+            flex-wrap: wrap;
+          }
+          @include xsm {
+            flex-wrap: wrap;
+          }
+          .styng-form-field-width {
+            .mat-form-field-wrapper {
+              .mat-form-field-flex {
+                .mat-form-field-infix {
+                  background: #000;
+                }
+              }
+            }
+            .cls-1 {
+              .cls-2 {
+              }
+            }
+
+            & > div {
+              @include xsm {
+                max-width: 145px;
+                width: 100%;
+              }
+            }
+            .mat-select {
+              @include xsm {
+                min-width: 120px;
+                max-width: 180px;
+                width: 100% !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .selection-buttons-container {
+    display: flex;
+    padding-left: 20px;
+    margin-bottom: 20px;
+    .selection-button {
+      color: $black;
+      background: $white;
+      min-width: 130px;
+      width: 100%;
+      height: 37px;
+      font-size: 14px;
+      border-bottom: 1px solid $gray-1;
+      margin: 0 !important;
+      border-radius: 4px 4px 0 0;
+      &.active {
+        color: $white;
+        background: $black;
+      }
+    }
+  }
+}
+
+.broadcast-section {
+  flex-direction: column !important;
+  .dashboard-settings-form-wrapper {
+    width: 100%;
+    & > div {
+      width: 100%;
+      & > .col-one {
+        width: 100%;
+      }
+    }
+  }
+  .broadcast-mat-form-field {
+    max-width: 465px;
+    width: 100%;
+    padding-right: 116px;
+    @include xsm {
+      padding: 0;
+    }
+    &.txtarea-group {
+      position: relative;
+      @include xsm {
+        margin-top: 50px;
+      }
+      .mat-form-field-infix {
+        padding: 0 !important;
+        textarea {
+          font-size: 14px !important;
+          padding: 10px !important;
+        }
+      }
+      .txtarea-btnGroup {
+        position: absolute;
+        top: 0;
+        left: calc(100% + 10px);
+        display: block;
+        max-width: 105px;
+        width: 100%;
+        @include xsm {
+          top: -50px;
+          left: 0;
+          display: flex;
+        }
+
+        .btn {
+          display: block;
+          color: $black;
+          background: $white;
+          height: 30px;
+          line-height: 28px;
+          font-size: 14px;
+          margin-bottom: 10px;
+          padding: 0 10px;
+          border: 1px solid #dedede;
+          border-radius: 4px;
+          @include xsm {
+            margin: 0 0 0 10px;
+            &:first-child {
+              margin-left: 0;
+            }
+          }
+          &:last-child {
+            margin-bottom: 0;
+          }
+          &:hover {
+            background: #d8d8d8;
+          }
+        }
+      }
+    }
+  }
+  .file-input {
+    display: none;
+  }
+  .attech-file-section {
+    max-width: 350px;
+    width: 100%;
+    ul {
+      display: inline-block;
+      padding: 0;
+      margin: 10px 0 20px;
+      li {
+        position: relative;
+        list-style: none;
+        font-size: 14px;
+        margin-bottom: 5px;
+        &:last-child {
+          margin-bottom: 0;
+        }
+        & > div {
+          display: flex;
+          figure {
+            max-width: 10px;
+            width: 100%;
+            margin: 5px 0 0 10px;
+            cursor: pointer;
+            img {
+              display: block;
+              width: 100%;
+              height: auto;
+            }
+          }
+        }
+        .error-msg {
+          display: block;
+          color: #c23535;
+          width: 100%;
+          font-size: 14px;
+          margin: 5px 0 0;
+        }
+      }
+    }
+  }
+  .template-list {
+    margin-bottom: 20px;
+  }
+}
+
+.action-btn-group {
+  display: flex;
+  width: 100%;
+  margin: 20px 0px 0px 0px;
+  .btn {
+    min-width: 120px;
+    font-size: 15px;
+    margin: 0 0 0 10px;
+    border-radius: 5px;
+    @include xsm {
+      font-size: 14px;
+      padding: 0 15px;
+    }
+    &:hover {
+      background: $gray-2;
+    }
+    &.btn-back {
+      color: $black-1;
+      background: $white;
+      margin: 0;
+      &:hover {
+        background: $gray-3;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  .dashboard-layout {
+    padding-left: 0px;
+    padding-top: 20px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: 100%;
+    min-height: calc(100vh - 97px);
+    background-color: #f0f0f0;
+    margin-bottom: 98px;
+    padding-bottom: 20px;
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 959px) {
+  .dashboard-layout {
+    min-height: calc(100vh - 97px);
+    background-color: #f0f0f0;
+  }
+}
+
+.template-list {
+  width: 100%;
+}
+
+.template-list-table {
+  width: 100%;
+  overflow: auto;
+  max-height: 57vh;
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.template-list-pagination {
+  width: 100%;
+}
+
+.template-list-table-row:hover {
+  cursor: pointer;
+}
+
+.template-list-table-row-shortcut {
+  width: 100px;
+  padding-right: 2em;
+  color: #000;
+}
+
+.template-list-table-row {
+  max-width: calc((100vw - 350px) / 2);
+  padding-right: 2em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.template-list {
+  max-width: calc(100vw - 250px);
+
+  ::ng-deep .mat-menu-panel {
+    height: 50vh;
+  }
+}
+
+.template-list-paginator {
+  ::ng-deep {
+    .mat-select-arrow-wrapper {
+      transform: translateX(0px) translateY(-2px) !important;
+    }
+    .mat-form-field-appearance-legacy .mat-form-field-infix {
+      // padding: 0 !important;
+      min-height: 20px !important;
+    }
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  .template-list-table-row {
+    max-width: 33vw;
+  }
+
+  .template-list-table-row-shortcut {
+    width: 50px;
+  }
+
+  .template-list {
+    max-width: 90vw;
+  }
+}
+
+@media only screen and (min-width: 1920px) {
+}
+
+.btn-text-holder {
+  margin: 0;
+}
+
+.mat-table {
+  .template-list-table-row {
+    .mat-icon {
+      color: #888887;
+      border-radius: 4px;
+      padding: 3px;
+      box-sizing: content-box;
+      &:hover {
+        background: #c5c5c4;
+      }
+    }
+  }
+}
+
+.btn-back {
+  background: #fff;
+  color: #000;
+  border-radius: 0px;
+  margin-right: 20px;
+  margin-left: 10px;
+  padding: 0px 60px;
+}
+
+.btn-selectRecipients {
+  border: none;
+  border-radius: 0px;
+}
+
+.wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.wrapper .tooltip {
+  top: calc(100% - 10px);
+  left: 0px;
+  width: 400px;
+  bottom: 0;
+  color: $white;
+  display: block;
+  margin-bottom: 15px;
+  opacity: 1;
+  pointer-events: none;
+  position: absolute;
+  transform: translateY(10px);
+  transition: all 0.25s ease-out;
+  pointer-events: auto;
+  transform: translateY(0px);
+  @include xsm {
+    max-width: 400px;
+    width: 100%;
+    min-width: 220px;
+  }
+}
+
+::ng-deep .accordion-date-input {
+  width: 45%;
+  .mat-form-field-infix {
+    width: 100px !important;
+  }
+}
+
+::ng-deep mat-expansion-panel {
+  .mat-expansion-indicator {
+    display: none;
+  }
+}
+
+::ng-deep .mat-form-field-infix {
+  @include xsm {
+    width: 100% !important;
+  }
+}
+
+.mat-form-field-appearance-legacy {
+  ::ng-deep .mat-form-field-wrapper {
+    @include xsm {
+      margin: 0 !important;
+    }
+  }
+}
+
+.loading-spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #0606067d;
+  z-index: 9999;
+  .loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+  }
+}
+
+.confirmation-txt {
+  display: flex;
+  align-items: center;
+  padding-right: 15px;
+  margin-bottom: 20px;
+  span {
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+  }
+}
+
+.ng-star-inserted {
+  .filter-form {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 25px;
+    @include sm {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    @include xsm {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .mat-form-field {
+      min-width: 250px;
+      max-width: 300px;
+    }
+    .mat-form-field-wrapper {
+      .mat-form-field-appearance-legacy {
+        .mat-form-field-infix {
+          border-color: #dedede;
+        }
+      }
+    }
+    .btn-group {
+      margin-bottom: 10px;
+      .btn {
+        font-size: 15px;
+        margin-left: 10px;
+        border-radius: 5px;
+        @include sm {
+          font-size: 14px;
+        }
+        @include xsm {
+          font-size: 14px;
+        }
+        &.btn-save {
+          background: $white;
+          color: $black-1;
+          @include sm {
+            margin-left: 0;
+          }
+          @include xsm {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  }
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+// .wrapper .tooltip:before {
+//   bottom: -20px;
+//   content: " ";
+//   display: block;
+//   height: 20px;
+//   left: 0;
+//   position: absolute;
+//   width: 100%;
+// }
+
+/* CSS Triangles - see Trevor's post */
+// .wrapper .tooltip:after {
+//   border-left: solid transparent 10px;
+//   border-right: solid transparent 10px;
+//   border-top: solid #1496bb 10px;
+//   bottom: -10px;
+//   content: " ";
+//   height: 0;
+//   left: 50%;
+//   margin-left: -13px;
+//   position: absolute;
+//   width: 0;
+// }
+
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0px);
+}
+
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+// .cdk-overlay-container,
+// .cdk-global-overlay-wrapper {
+//   top: 26px !important;
+//   left: 26px !important;
+// }
+
+// ::ng-deep .cdk-overlay-connected-position-bounding-box {
+//   top: 26px !important;
+// }
+// ::ng-deep .cdk-overlay-pane {
+//   transform: translateY(0) translateX(-40px) !important;
+// }
+
+::ng-deep .mat-select-panel {
+  @include xsm {
+    min-width: 120px !important;
+  }
+}
+
+.mat-chip-list {
+  margin: 10px 0;
+  display: flex;
+}
+
+.mat-expansion-panel-spacing {
+  margin: 0px;
+  border-radius: 0px;
+}
+
+.pageContent_wrapper {
+  .template-list-table {
+    table {
+      ::ng-deep thead {
+        ::ng-deep tr {
+          ::ng-deep th {
+            padding: 0 10px;
+          }
+        }
+      }
+      ::ng-deep tbody {
+        ::ng-deep tr {
+          ::ng-deep td {
+            padding: 0 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.template-list-paginator {
+  ::ng-deep .mat-paginator-page-size-select {
+    margin: 0 0 0 5px !important;
+    ::ng-deep .mat-form-field-wrapper {
+      margin: 0 !important;
+      padding: 0 !important;
+      ::ng-deep .mat-form-field-infix {
+        padding: 2px !important;
+        min-height: 20px !important;
+        min-width: 50px !important;
+      }
+    }
+  }
+}
+
+.accordion-date-input {
+  ::ng-deep .mat-form-field-infix {
+    min-width: 100% !important;
+  }
+}
+
+::ng-deep {
+  .e-daterange-hidden {
+    display: none !important;
+  }
+}
+
+ejs-daterangepicker {
+  ::ng-deep .e-input-group {
+    input {
+      font-size: 14px !important;
+    }
+  }
+}
+
+.ib {
+  display: inline-block;
+  padding-left: 6px;
+}
